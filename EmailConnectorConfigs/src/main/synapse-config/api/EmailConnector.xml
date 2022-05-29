@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/emailconnector" name="EmailConnector" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/send">
+        <inSequence>
+            <property name="ContentType" scope="axis2" type="STRING" value="application/json"/>
+            <property name="messageType" scope="axis2" type="STRING" value="application/json"/>
+            <log level="custom">
+                <property expression="json-eval($)" name="payload"/>
+                <property expression="json-eval($.to)" name="tovalue"/>
+            </log>
+            <email.send configKey="smtpsconnection">
+                <from>FitMate</from>
+                <to>{json-eval($.to)}</to>
+                <subject>{json-eval($.subject)}</subject>
+                <content>{json-eval($.content)}</content>
+            </email.send>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>
